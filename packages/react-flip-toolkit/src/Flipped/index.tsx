@@ -69,6 +69,7 @@ export const FlippedWithContext: FunctionComponent<FlippedProps> = ({
   onComplete,
   onExit,
   onSpringUpdate,
+  shouldFlipIgnore,
   ...rest
 }) => {
   if (!children) {
@@ -95,7 +96,8 @@ export const FlippedWithContext: FunctionComponent<FlippedProps> = ({
                 onStartImmediate,
                 onComplete,
                 onExit,
-                onSpringUpdate
+                onSpringUpdate,
+                shouldFlipIgnore
               }
             }
             return (
@@ -129,6 +131,7 @@ if (process.env.NODE_ENV !== 'production') {
     shouldInvert: PropTypes.func,
     onExit: PropTypes.func,
     portalKey: PropTypes.string,
+    shouldFlipIgnore: PropTypes.func,
     stagger: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
   }
 }

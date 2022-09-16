@@ -55,6 +55,7 @@ export interface CallbackFlippedProps {
     previousDecisionData: any,
     currentDecisionData: any
   ) => boolean
+  shouldFlipIgnore?: () => boolean
 }
 
 export type FlippedProps = CallbackFlippedProps & SerializableFlippedProps

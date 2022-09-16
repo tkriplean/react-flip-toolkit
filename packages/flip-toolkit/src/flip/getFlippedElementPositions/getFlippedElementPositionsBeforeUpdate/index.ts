@@ -36,7 +36,25 @@ const getFlippedElementPositionsBeforeUpdate = ({
   inProgressAnimations = {},
   portalKey
 }: GetFlippedElementPositionsBeforeUpdateArgs): FlippedElementPositionsBeforeUpdateReturnVals => {
-  const flippedElements = getAllElements(element, portalKey)
+
+  const candidateFlippedElements = getAllElements(element, portalKey)
+
+  let flippedElements:HTMLElement[] = []
+
+  candidateFlippedElements
+    .map(
+      el => {
+        let ret:boolean = !!(flipCallbacks &&
+                !flipCallbacks[el.dataset.flipId!] || 
+                (flipCallbacks?.[el.dataset.flipId!].shouldFlipIgnore === undefined || !flipCallbacks?.[el.dataset.flipId!].shouldFlipIgnore?.())
+              )
+        // console.log('heya', ret, el, flipCallbacks?.[el.dataset.flipId!].shouldFlipIgnore?.())
+        if (ret) {
+          flippedElements.push(el)
+        } 
+      }
+    )
+
 
   const inverseFlippedElements = toArray(
     element.querySelectorAll(`[${constants.DATA_INVERSE_FLIP_ID}]`)
@@ -73,6 +91,8 @@ const getFlippedElementPositionsBeforeUpdate = ({
       childIdsToParentBCRs[el.dataset.flipId!] = parentBCRs[bcrIndex][1]
       childIdsToParents[el.dataset.flipId!] = parent
     })
+
+  // console.log("before", flippedElements)
 
   const filteredFlippedElements = getRects(flippedElements)
 

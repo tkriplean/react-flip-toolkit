@@ -1,4 +1,7 @@
 import { addTupleToObject, getRects, getAllElements } from '../utilities'
+import { FlipCallbacks } from '../../../types'
+
+
 import {
   FlippedElementPositionsAfterUpdate,
   FlippedElementPositionDatumAfterUpdate
@@ -6,12 +9,37 @@ import {
 
 const getFlippedElementPositionsAfterUpdate = ({
   element,
-  portalKey
+  portalKey,
+  flipCallbacks
 }: {
   element: HTMLElement
   portalKey?: string
+  flipCallbacks?: FlipCallbacks
 }): FlippedElementPositionsAfterUpdate => {
-  const positionArray = getRects(getAllElements(element, portalKey)).map(
+
+
+
+
+  const candidateFlippedElements = getAllElements(element, portalKey)
+  let flippedElements:HTMLElement[] = []
+  candidateFlippedElements
+    .map(
+      el => {
+
+        // console.log(el, flipCallbacks?.[el.dataset.flipId!])
+        let ret:boolean = !!(flipCallbacks &&
+                !flipCallbacks?.[el.dataset.flipId!] || 
+                (flipCallbacks?.[el.dataset.flipId!].shouldFlipIgnore === undefined || !flipCallbacks?.[el.dataset.flipId!].shouldFlipIgnore?.())
+              )
+
+        if (ret) {
+          flippedElements.push(el)
+        } 
+      }
+    )
+
+  // console.log("after", flippedElements)
+  const positionArray = getRects(flippedElements).map(
     ([child, childBCR]) => {
       const computedStyle = window.getComputedStyle(child)
       return [
