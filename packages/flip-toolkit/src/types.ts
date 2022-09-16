@@ -32,7 +32,7 @@ export interface CallbackFlippedProps {
   /** Similar to onStart, but guaranteed to run for all FLIP-ped elements on the initial tick of the FLIP animation, before the next frame has rendered, even if the element in question has a stagger delay. It is provided a reference to the DOM element being transitioned as the first argument.   */
   onStartImmediate?: (element: HTMLElement, decisionData?: DecisionData) => void
   /** Called when the FLIP animation completes. It is provided a reference to the DOM element being transitioned as the first argument. (If transitions are interruped by new ones, onComplete will still be called.) */
-  onComplete?: (element: HTMLElement, decisionData?: DecisionData) => void
+  onComplete?: (element: HTMLElement, decisionData?: DecisionData, isCancellation?: boolean) => void
   /** Called with the current spring value (normally between 0 - 1 but might briefly go over or under that range depending on the level of "bounciness" of the spring). Useful if you'd like to tween other, non-FLIP animations in concert with a FLIP transition.  */
   onSpringUpdate?: (springValue: number) => void
   /** Called when the element first appears in the DOM. It is provided a reference to the DOM element being transitioned as the first argument, and the index of the element relative to all appearing elements as the second. Note: If you provide an onAppear prop, the default opacity of the element will be set to 0 to allow you to animate it in without any initial flicker. If you don't want any opacity animation, just set the element's opacity to 1 immediately in your onAppear function. */

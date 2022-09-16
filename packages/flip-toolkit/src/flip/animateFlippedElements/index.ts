@@ -163,6 +163,7 @@ export default ({
   })
   // hook for users of lib to attach logic when all flip animations have completed
   if (onComplete) {
+
     flipCompletedPromise.then(() => onComplete(containerEl, decisionData))
   }
   if (!flippedIds.length) {
@@ -342,11 +343,11 @@ export default ({
         body
       })
 
-      let onComplete: () => void
+      let onComplete: (isCancellation?: boolean) => void
       if (flipCallbacks[id] && flipCallbacks[id].onComplete) {
         // must cache or else this could cause an error
         const cachedOnComplete = flipCallbacks[id].onComplete
-        onComplete = () => cachedOnComplete!(element, decisionData)
+        onComplete = (isCancellation?: boolean) => cachedOnComplete!(element, decisionData, isCancellation)
       }
 
       // this should be called when animation ends naturally
@@ -354,8 +355,9 @@ export default ({
       // when it is called, the animation has already been cancelled
       const onAnimationEnd = (isCancellation: boolean) => {
         delete inProgressAnimations[id]
+
         if (isFunction(onComplete)) {
-          onComplete()
+          onComplete(!!isCancellation)
         }
         // remove identity transform -- this should have no effect on layout
         element.style.transform = ''
